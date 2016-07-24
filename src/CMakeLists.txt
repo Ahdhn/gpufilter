@@ -5,9 +5,6 @@ link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib)
 cuda_compile(CUDA_SOURCES gpudefs.cu)
 cuda_add_library(gpufilter timer.cpp defs.cpp ${CUDA_SOURCES})
 
-cuda_add_executable(alg5 run_alg5.cu)
-target_link_libraries(alg5 gpufilter)
-
 add_executable(ex1 example_sat1.cc)
 target_link_libraries(ex1 gpufilter)
 
@@ -45,3 +42,9 @@ target_link_libraries(gaussian gpufilter)
 
 #cuda_add_executable(recursive app_recursive.cc)
 #target_link_libraries(recursive cv highgui gpufilter)
+
+cuda_add_executable(alg5 run_alg5.cu)
+target_link_libraries(alg5 gpufilter)
+
+cuda_add_executable(alg5f4 run_alg5f4.cu)
+target_link_libraries(alg5f4 gpufilter)
