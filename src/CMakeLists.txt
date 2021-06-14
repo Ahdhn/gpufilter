@@ -3,7 +3,8 @@ include_directories(${CUDA_SDK_ROOT_DIR}/common/inc)
 set(CUDA_BUILD_CUBIN on)
 
 macro(add_cuda_exec name)
-  cuda_add_executable(${name} ${name}.cu)
+  file(GLOB_RECURSE UtilFiles ${CMAKE_SOURCE_DIR}/lib/util/*.*)
+  cuda_add_executable(${name} ${name}.cu ${UtilFiles})
   target_link_libraries(${name} util)
 endmacro()
 

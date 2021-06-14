@@ -15,15 +15,15 @@ endif()
 find_package(CUDA REQUIRED)
 
 set(CUDA_NVCC_FLAGS
-  --ptxas-options=-v -O3 -ftz=true
+  --ptxas-options=-v -ftz=true
   -prec-div=false -prec-sqrt=false -use_fast_math #-std=c++11
 )
 
 #set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch=sm_35) # Kepler
-#set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch=sm_61) # Pascal
+set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch=sm_61) # Pascal
 #set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch=sm_37) # Kepler K80
 #set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch=sm_60) # Tesla P100
-set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch=sm_75) # Titan RTX
+#set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch=sm_75) # Titan RTX
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 

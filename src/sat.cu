@@ -11,7 +11,7 @@
 #endif
 #define APPNAME "[sat_" << ORDER << "]"
 
-//== INCLUDES ==================================================================
+ //== INCLUDES ==================================================================
 
 #include <cmath>
 #include <cfloat>
@@ -60,53 +60,59 @@
  *  @tparam R Filter order
  */
 template<int R>
-void sat( float *h_img,
-          const int& width, const int& height, const int& runtimes,
-          const gpufilter::Vector<float, R+1>& w,
-          const int& border,
-          const gpufilter::BorderType& btype ) {
+void sat(float* h_img,
+	const int& width, const int& height, const int& runtimes,
+	const gpufilter::Vector<float, R + 1>& w,
+	const int& border,
+	const gpufilter::BorderType& btype) {
 
-    if (border == 0) {
-        gpufilter::sat_gpu<false, R>(h_img, width, height, runtimes, w);
-    } else if (border > 0) {
-        gpufilter::sat_gpu<true, R>(h_img, width, height, runtimes, w,
-                                    border, btype);
-    }
+	if (border == 0) {
+		gpufilter::sat_gpu<false, R>(h_img, width, height, runtimes, w);
+	}
+	else if (border > 0) {
+		gpufilter::sat_gpu<true, R>(h_img, width, height, runtimes, w,
+			border, btype);
+	}
 
 }
 
 // Main ------------------------------------------------------------------------
 
-int main( int argc, char** argv ) {
+int main(int argc, char** argv) {
 
-    int width, height, runtimes, border, a0border;
-    gpufilter::BorderType btype;
-    std::vector<float> cpu_img, gpu_img;
-    gpufilter::Vector<float, ORDER+1> w;
-    float me, mre;
+	int width, height, runtimes, border, a0border;
+	gpufilter::BorderType btype;
+	std::vector<float> cpu_img, gpu_img;
+	gpufilter::Vector<float, ORDER + 1> w;
+	float me, mre;
 
-    initial_setup(width, height, runtimes, btype, border,
-                  cpu_img, gpu_img, w, a0border, me, mre,
-                  argc, argv);
+	initial_setup(width, height, runtimes, btype, border,
+		cpu_img, gpu_img, w, a0border, me, mre,
+		argc, argv);
 
-    w[0] = 1.; w[1] = -1.; // this is sat
+	w[0] = 1.; w[1] = -1.; // this is sat
 
-    if (runtimes == 1) // running for debugging
-        print_info(width, height, btype, border, a0border, w);
 
-    gpufilter::ref_sat_cpu<ORDER>(&cpu_img[0], width, height, w, a0border, btype);
+	if (runtimes == 1) // running for debugging
+		print_info(width, height, btype, border, a0border, w);
 
-    sat<ORDER>(&gpu_img[0], width, height, runtimes, w, border, btype);
+	//gpufilter::print_pixels(&cpu_img[0], width, height);
 
-    gpufilter::check_cpu_reference( &cpu_img[0], &gpu_img[0], width*height, me, mre );
-    
-    if (runtimes == 1) // running for debugging
-        std::cout << APPNAME << " [max-error] [max-relative-error]:";
-    
-    // in sat max error is normally big because its values are big
-    std::cout << " " << std::scientific << me << " "
-              << std::scientific << mre << "\n";
+	gpufilter::ref_sat_cpu<ORDER>(&cpu_img[0], width, height, w, a0border, btype);
 
-    return 0;
+	sat<ORDER>(&gpu_img[0], width, height, runtimes, w, border, btype);
+
+	gpufilter::check_cpu_reference(&cpu_img[0], &gpu_img[0], width * height, me, mre);
+
+	//gpufilter::print_pixels(&cpu_img[0], width, height);
+
+	if (runtimes == 1) // running for debugging
+		std::cout << APPNAME << " [max-error] [max-relative-error]:";
+
+	// in sat max error is normally big because its values are big
+	std::cout << " " << std::scientific << me << " "
+		<< std::scientific << mre << "\n";
+
+	return 0;
 
 }

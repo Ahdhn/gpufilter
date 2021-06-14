@@ -256,6 +256,27 @@ void print_array( const T *a,
     std::cout << "\n";
 }
 
+template <typename T>
+void print_pixels(const T* buf, int w, int h)
+{
+    printf("\n%5c", ' ');
+    for (auto x = 0; x != w; x++) {
+        printf("%4u ", x);
+    }
+    printf("\n%5c", ' ');
+    for (auto x = 0; x != 5 * w; x++) {
+        printf("%c", '-');
+    }
+
+    for (auto y = 0; y != h; y++) {
+        printf("\n%4u|", y);
+        for (auto x = 0; x != w; x++) {
+            printf("%2.2f ", buf[y * w + x]);
+        }
+    }
+    printf("\n\n");
+}
+
 //==============================================================================
 } // namespace gpufilter
 //==============================================================================
